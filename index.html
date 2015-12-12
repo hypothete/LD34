@@ -7,10 +7,45 @@
 		body {
 			margin: 0;
 			overflow: hidden;
+			font-family: Helvetica;
+		}
+
+		#panel-a {
+			position: absolute;
+			bottom: 50px;
+			left: 50px;
+			width: 20vmax;
+			text-align: left;
+		}
+
+		#panel-b {
+			position: absolute;
+			bottom: 50px;
+			right: 50px;
+			width: 20vmax;
+			text-align: right;
+		}
+
+		button {
+			padding: 2em;
+			font-size: 1em;
+			display: inline-block;
 		}
 	</style>
 </head>
 <body>
+	<div id="panel-a">
+		<h1></h1>
+		<button class="grow">grow</button>
+		<button class="shrink">shrink</button>
+	</div>
+	<div id="panel-b">
+		<h1></h1>
+		<button class="grow">grow</button>
+		<button class="shrink">shrink</button>
+	</div>
+		
+	</div>
 	<script src="vendor/three.min.js"></script>
 	<script src="app.js"></script>
 </body>
