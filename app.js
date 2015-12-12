@@ -6,72 +6,59 @@
 		}),
 		scene = new THREE.Scene(),
 		camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000),
-		spot = new THREE.SpotLight(0xfffff0, 2.5),
+		spot = new THREE.SpotLight(0xfffff0, 1),
 		size = 7,
 		defaultGeo = new THREE.CylinderGeometry(0.125,0.18,0.5),
 		defaultSphere = new THREE.SphereGeometry(0.18,10,10),
-		cubes = new MakeCubes(size),
 		walls = new MakeRoomBounds(size),
-		axisHelper = new THREE.AxisHelper(5); //x is red
+		wallBounds= new THREE.BoundingBoxHelper(walls, 0xff00ff),
+		playerA = setVoxel(3,0,3,true);
+
 	document.body.appendChild(renderer.domElement);
 	renderer.setSize( window.innerWidth, window.innerHeight );
-	axisHelper.position.set(-size/2 - 0.5,-size/2 - 0.5,-size/2 - 0.5);
-	camera.position.set(-10.5,2,-10.5);
-	camera.lookAt(new THREE.Vector3(0,0,0));
-	spot.position.set(-8,size,-8);
-	scene.add(cubes,axisHelper,spot,walls);
-	var playerA = setVoxel(size-1,0,0,true);
-	var playerB = setVoxel(0,0,size-1,true);
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMap.type = THREE.BasicShadowMap;
+	camera.position.set(-9,5,-9);
+	camera.lookAt(new THREE.Vector3(3,3,3));
+	spot.position.set(-15,8,-15);
+	spot.castShadow = true;
+	spot.shadowMapWidth = 512;
+	spot.shadowMapHeight = 512;
+	spot.shadowCameraNear = 1;
+	spot.shadowCameraFar = 500;
+	spot.shadowCameraFov = 30;
 
+	scene.add(spot,walls);
+	scene.add(wallBounds);
+	wallBounds.update();
+	wallBounds.visible = false;
 	setColor(playerA, new THREE.Color(0.6,0.8,0.1));
-	setColor(playerB, new THREE.Color(0.1,0.8,0.6));
 	animate();
 
 	window.setInterval(function(){
 		var aNeighbors = getNeighbors(playerA);
-		var bNeighbors = getNeighbors(playerB);
-
 		var randIndexA = Math.round(Math.random()*(aNeighbors.length-1));
 		if(randIndexA === -0) randIndexA = 0;
-		if(aNeighbors[randIndexA] === undefined){
-			console.log(randIndexA + '/' + aNeighbors.length);
-		}
-		else if(!aNeighbors[randIndexA].visible){
-			aNeighbors[randIndexA].visible = true;
-			setColor(aNeighbors[randIndexA], playerA.material.color);
+		var randNbr = aNeighbors[randIndexA];
+		var mod = getIndexModifier(randIndexA);
+		var nextPosition = new THREE.Vector3(
+			playerA.position.x+mod[0],
+			playerA.position.y+mod[1],
+			playerA.position.z+mod[2]);
+		if(randNbr === undefined && randIndexA !== 3 && wallBounds.box.containsPoint(nextPosition)){ //no negative y
+			randNbr = setVoxel(nextPosition.x, nextPosition.y, nextPosition.z,true);
+			setColor(randNbr, playerA.material.color);
+			aNeighbors[randIndexA] = randNbr;
 			updateArms(playerA, aNeighbors);
-			playerA = aNeighbors[randIndexA];
+			playerA = randNbr;
 			updateArms(playerA, getNeighbors(playerA));
+			spot.target = playerA;
 		}
-
-		var randIndexB = Math.round(Math.random()*(bNeighbors.length-1));
-		if(randIndexB === -0) randIndexB = 0;
-		if(bNeighbors[randIndexB] === undefined){
-			console.log(randIndexB + '/' + bNeighbors.length);
-		}
-		else if(!bNeighbors[randIndexB].visible){
-			bNeighbors[randIndexB].visible = true;
-			setColor(bNeighbors[randIndexB], playerB.material.color);
-			updateArms(playerB, bNeighbors);
-			playerB = bNeighbors[randIndexB];
-			updateArms(playerB, getNeighbors(playerB));
-		}
-
-	}, 100);
+	}, 60);
 
 	function animate(){
 		window.requestAnimationFrame(animate);
 		renderer.render(scene, camera);
-	}
-
-	function reduce(arr){
-		var arrOk = [];
-		arr.forEach(function(an){
-			if(an !== undefined && !an.visible){
-				arrOk.push(an);
-			}
-		});
-		return arrOk;
 	}
 
 	function getVoxel(a,b,c){
@@ -97,6 +84,18 @@
 		});
 	}
 
+	function getIndexModifier(n){
+		var modifiers = [
+			[1,0,0],
+			[-1,0,0],
+			[0,1,0],
+			[0,-1,0],
+			[0,0,1],
+			[0,0,-1]
+		];
+		return modifiers[n];
+	}
+
 	function getNeighbors(voxel){
 		var voxelVals = voxel.name.split('.'),
 			a = Number(voxelVals[0]),
@@ -115,27 +114,13 @@
 
 	function setVoxel(a,b,c,d){
 		var voxel = getVoxel(a,b,c);
-		if(voxel){
-			voxel.visible = d;
-			return voxel;
+		if(!voxel){
+			voxel = new Voxel(a,b,c);
+			voxel.name = a + '.' + b + '.' + c;
+			scene.add(voxel);
 		}
-		return undefined;
-	}
-
-	function MakeCubes(size){
-		var cubeParent = new THREE.Object3D();
-		
-		for(var i=0; i<size; i++){
-			for(var j=0; j<size; j++){
-				for(var k=0; k<size; k++){
-					var voxel = new Voxel(i - size/2,j - size/2,k - size/2);
-					voxel.name = i + '.' + j + '.' + k;
-					voxel.visible = false;
-					cubeParent.add(voxel);
-				}
-			}
-		}
-		return cubeParent;
+		voxel.visible = d;
+		return voxel;
 	}
 
 	function Voxel(a,b,c){
@@ -170,6 +155,12 @@
 		nz.rotation.set(-Math.PI/2,0,0);
 		v.add(px,nx,py,ny,pz,nz);
 		v.position.set(a,b,c);
+		v.castShadow = true;
+		v.receiveShadow = true;
+		v.children.forEach(function(c){
+			c.castShadow = true;
+			c.receiveShadow = true;
+		});
 		return v;
 	}
 
@@ -182,6 +173,8 @@
 			}),
 			roomGeo = new THREE.BoxGeometry(size+1,size+1,size+1),
 			roomMesh = new THREE.Mesh(roomGeo, roomMat);
+			roomMesh.position.set(size/2,size/2,size/2);
+			roomMesh.receiveShadow = true;
 		return roomMesh;
 	}
 
