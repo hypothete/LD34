@@ -46,6 +46,8 @@
 		keys[e.keyCode] = false;
 	});
 
+	window.addEventListener('resize', windowResize, false);
+
 	function animate(){
 		window.requestAnimationFrame(animate);
 		playerA.checkKeys();
@@ -82,6 +84,12 @@
 		spotA.target = spotB;
 		spotLightHelperA.update();
 		spotLightHelperB.update();
+	}
+
+	function windowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
 	}
 
 	function isPointInCurve(point, pts){
