@@ -37,9 +37,6 @@
 
 	window.addEventListener('keydown', function(e){
 		keys[e.keyCode] = true;
-		if(keys[32] && !round.timer.running){
-			round.start();
-		}
 	});
 
 	window.addEventListener('keyup', function(e){
@@ -282,6 +279,10 @@
 							r.domElement.textContent = 'Tie';
 						}
 					}
+				}
+				else if(keys[32]){
+					r.timer.elapsedTime = 0;
+					r.start();
 				}
 			}
 		};
