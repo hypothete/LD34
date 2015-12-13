@@ -1,8 +1,9 @@
 body {
 	margin: 0;
 	overflow: hidden;
-	font-family: Helvetica;
-	color: #fff;
+	font-family: 'Chewy';
+	color: #eee;
+	letter-spacing: 0.125em;
 }
 
 #panel-a {
@@ -16,6 +17,7 @@ body {
 
 #panel-a h1 {
 	margin-top: -5em;
+	width: 1.5em;
 }
 
 #panel-b {
@@ -29,6 +31,7 @@ body {
 
 #panel-b h1 {
 	margin-top: -5em;
+	width: 1.5em;
 }
 
 #timeleft {

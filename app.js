@@ -71,7 +71,7 @@
 
 	function makeLights(){
 		var spotA = new THREE.SpotLight(0x668880, 1),
-			spotB = new THREE.SpotLight(0xfffff0,1),
+			spotB = new THREE.SpotLight(0xfffff0,0.8),
 			pointA = new THREE.PointLight(0xfffff0, 0.5),
 			spotLightHelperA = new THREE.SpotLightHelper( spotA ),
 			spotLightHelperB = new THREE.SpotLightHelper( spotB );
@@ -168,7 +168,7 @@
 				new THREE.Vector3(0.75,0,0.5),
 				new THREE.Vector3(0,0,0.75)
 				]), new THREE.MeshStandardMaterial({
-				roughness: 0.8,
+				roughness: 0.6,
 				metalness: 0,
 				color: color.add(new THREE.Color(1,0.2,0.3)),
 				map: THREE.ImageUtils.loadTexture('assets/shroom.jpg'),
