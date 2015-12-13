@@ -114,6 +114,8 @@
 			grow: domElement.querySelector('.grow'),
 			keyGrow: keyGrow,
 			keyShrink: keyShrink,
+			growTouch: false,
+			shrinkTouch: false,
 			state: 0, //0 = nothing, 1 = growing, -1 = shrinking
 			shrink: domElement.querySelector('.shrink'),
 			domElement: domElement,
@@ -178,16 +180,16 @@
 			checkKeys: function(){
 				p.grow.classList.remove('active');
 				p.shrink.classList.remove('active');
-				if(keys[keyGrow]){
-					growHandler();
+				if(keys[keyGrow] || p.growTouch){
+					p.state = 1;
 					p.grow.classList.add('active');
 				}
-				else if(keys[keyShrink]){
-					shrinkHandler();
+				else if(keys[keyShrink] || p.shrinkTouch){
+					p.state = -1;
 					p.shrink.classList.add('active');
 				}
 				else {
-					inactiveHandler();
+					p.state = 0;
 				}
 			}
 		};
@@ -198,34 +200,39 @@
 		p.stipe.rotation.x = -Math.PI/2;
 		p.mesh.add(p.stipe);
 
-		function growHandler(e){
+		p.grow.addEventListener('touchstart', function (e){
 			if (e) e.preventDefault();
-			if(p.inRound){
-				p.state = 1;
-			}
-		}
-
-		function shrinkHandler(e){
+			p.growTouch = true;
+		});
+		p.grow.addEventListener('touchend', function (e){
 			if (e) e.preventDefault();
-			if(p.inRound){
-				p.state = -1;
-			}
-		}
-
-		function inactiveHandler(e){
+			p.growTouch = false;
+		});
+		p.grow.addEventListener('mousedown', function (e){
 			if (e) e.preventDefault();
-			p.state = 0;
-		}
+			p.growTouch = true;
+		});
+		p.grow.addEventListener('mouseup', function (e){
+			if (e) e.preventDefault();
+			p.growTouch = false;
+		});
 
-		p.grow.addEventListener('touchstart', growHandler);
-		p.grow.addEventListener('touchend', inactiveHandler);
-		p.grow.addEventListener('mousedown', growHandler);
-		p.grow.addEventListener('mouseup', inactiveHandler);
-
-		p.shrink.addEventListener('mouseup', inactiveHandler);
-		p.shrink.addEventListener('touchend', inactiveHandler);
-		p.shrink.addEventListener('mousedown', shrinkHandler);
-		p.shrink.addEventListener('touchstart', shrinkHandler);
+		p.shrink.addEventListener('touchstart', function (e){
+			if (e) e.preventDefault();
+			p.shrinkTouch = true;
+		});
+		p.shrink.addEventListener('touchend', function (e){
+			if (e) e.preventDefault();
+			p.shrinkTouch = false;
+		});
+		p.shrink.addEventListener('mousedown', function (e){
+			if (e) e.preventDefault();
+			p.shrinkTouch = true;
+		});
+		p.shrink.addEventListener('mouseup', function (e){
+			if (e) e.preventDefault();
+			p.shrinkTouch = false;
+		});
 
 		p.updateTube();
 

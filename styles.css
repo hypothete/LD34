@@ -12,7 +12,6 @@ body {
 	align-items:center;
 	bottom: 50px;
 	left: 50px;
-	width: 20vmax;
 }
 
 #panel-a h1 {
@@ -26,7 +25,6 @@ body {
 	align-items:center;
 	bottom: 50px;
 	right: 50px;
-	width: 20vmax;
 }
 
 #panel-b h1 {
@@ -49,9 +47,10 @@ body {
 
 .button {
 	position: relative;
-	font-size: 2em;
-	width:1.5em;
-	height:1.5em;
+	font-size: 1.5em;
+	color: rgba(255,255,255,0.5);
+	width:6em;
+	height:6em;
 	margin:0.5em;
 	align-items: center;
 	justify-content: center;
