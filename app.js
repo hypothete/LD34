@@ -27,12 +27,13 @@
 
 	document.body.appendChild(renderer.domElement);
 	renderer.setSize( window.innerWidth, window.innerHeight );
-	camera.position.set(-10,size,-10);
+	camera.position.set(-10,size+0.5,-10);
 	camera.lookAt(new THREE.Vector3(3,3,3));
 	scene.add(walls,wallBounds, playerB.mesh, playerA.mesh);
 	wallBounds.update();
 	wallBounds.visible = false;
 	makeLights();
+	makeSky();
 	animate();
 
 	window.addEventListener('keydown', function(e){
@@ -58,7 +59,7 @@
 	function MakeRoomBounds(size){
 		var roomMat = new THREE.MeshStandardMaterial({
 				side: THREE.BackSide,
-				color: 0x442211,
+				map: THREE.ImageUtils.loadTexture('assets/dirt.jpg'),
 				roughness: 0.9,
 				metalness: 0
 			}),
@@ -71,16 +72,30 @@
 	function makeLights(){
 		var spotA = new THREE.SpotLight(0x668880, 1),
 			spotB = new THREE.SpotLight(0xfffff0,1),
+			pointA = new THREE.PointLight(0xfffff0, 0.5),
 			spotLightHelperA = new THREE.SpotLightHelper( spotA ),
 			spotLightHelperB = new THREE.SpotLightHelper( spotB );
 		scene.add( spotA /*, spotLightHelperA*/);
 		scene.add(spotB /*, spotLightHelperB*/ );
-
-		spotA.position.set(-15,-20,-15);
-		spotB.position.set(-10,50,-10);
+		scene.add(pointA);
+		pointA.position.set(size/2,size/2,size);
+		spotA.position.set(-15,-10,-15);
+		spotB.position.set(-20,30,-20);
 		spotA.target = spotB;
 		spotLightHelperA.update();
 		spotLightHelperB.update();
+	}
+
+	function makeSky(){
+		var skyball = new THREE.Mesh(
+			new THREE.PlaneGeometry(40,40,1,1),
+			new THREE.MeshBasicMaterial({
+				map: THREE.ImageUtils.loadTexture('assets/sky.jpg'),
+			})
+			);
+		scene.add(skyball);
+		skyball.position.set(10,size,10);
+		skyball.rotation.y = -camera.rotation.y + Math.PI;
 	}
 
 	function windowResize() {
@@ -143,7 +158,8 @@
 				]), new THREE.MeshStandardMaterial({
 				roughness: 0.7,
 				metalness: 0,
-				color: color.clone().addScalar(0.8)
+				color: color.clone().addScalar(0.8),
+				map: THREE.ImageUtils.loadTexture('assets/stipe.jpg'),
 			})),
 
 			cap: new THREE.Mesh(new THREE.LatheGeometry([
@@ -152,9 +168,10 @@
 				new THREE.Vector3(0.75,0,0.5),
 				new THREE.Vector3(0,0,0.75)
 				]), new THREE.MeshStandardMaterial({
-				roughness: 0.6,
-				metalness: 0.3,
-				color: color.add(new THREE.Color(1,0.2,0.3))
+				roughness: 0.8,
+				metalness: 0,
+				color: color.add(new THREE.Color(1,0.2,0.3)),
+				map: THREE.ImageUtils.loadTexture('assets/shroom.jpg'),
 			})),
 
 			updateTube: function(){

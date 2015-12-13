@@ -33,7 +33,7 @@ body {
 
 #timeleft {
 	position: absolute;
-	top: 50px;
+	bottom: 50px;
 	left: 50%;
 	width: 25vw;
 	margin-left: -12.5vw;
@@ -49,8 +49,8 @@ body {
 	position: relative;
 	font-size: 1.5em;
 	color: rgba(255,255,255,0.5);
-	width:6em;
-	height:6em;
+	width:4em;
+	height:4em;
 	margin:0.5em;
 	align-items: center;
 	justify-content: center;
