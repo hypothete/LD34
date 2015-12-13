@@ -174,12 +174,19 @@
 				map: THREE.ImageUtils.loadTexture('assets/shroom.jpg'),
 			})),
 
+			tip: null,
+
 			updateTube: function(){
 				p.mesh.geometry.dispose();
-				p.mesh.geometry = new THREE.TubeGeometry(p.curve, p.curve.points.length*3, Math.max(0.25 * (p.curve.points.length/p.max), 0.1),6);
+				var tubeScale = Math.max(0.25 * (p.curve.points.length/p.max), 0.1);
+				p.mesh.geometry = new THREE.TubeGeometry(p.curve, p.curve.points.length*3, tubeScale,6);
 				p.count.textContent = p.curve.points.length;
 				var scaleVal = 0.5 + 2*p.curve.points.length/p.max;
 				p.stipe.scale.set(scaleVal,scaleVal,scaleVal);
+				if(p.tip !== null){
+					p.tip.position.copy(p.curve.points[p.curve.points.length-1]);
+					p.tip.scale.set(tubeScale,tubeScale,tubeScale);
+				}
 			},
 			updateState: function(){
 				if(p.state == 1 && p.curve.points.length < p.max){
@@ -256,6 +263,8 @@
 			p.shrinkTouch = false;
 		});
 
+		p.tip = new THREE.Mesh(new THREE.SphereGeometry(1,8,8), p.mesh.material);
+		p.mesh.add(p.tip);
 		p.updateTube();
 
 		return p;
@@ -287,10 +296,10 @@
 						r.pA.inRound = r.pB.inRound = false;
 
 						if(aScore > bScore){
-							r.domElement.textContent = 'Player A wins';
+							r.domElement.textContent = 'Player A wins!';
 						}
 						else if(bScore > aScore){
-							r.domElement.textContent = 'Player B wins';
+							r.domElement.textContent = 'Player B wins!';
 						}
 						else {
 							r.domElement.textContent = 'Tie';
