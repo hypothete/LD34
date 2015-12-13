@@ -3,48 +3,19 @@
 <head>
 	<meta charset="UTF8"/>
 	<title>LD34 Entry - by hypothete</title>
-	<style>
-		body {
-			margin: 0;
-			overflow: hidden;
-			font-family: Helvetica;
-		}
-
-		#panel-a {
-			position: absolute;
-			bottom: 50px;
-			left: 50px;
-			width: 20vmax;
-			text-align: left;
-		}
-
-		#panel-b {
-			position: absolute;
-			bottom: 50px;
-			right: 50px;
-			width: 20vmax;
-			text-align: right;
-		}
-
-		button {
-			padding: 2em;
-			font-size: 1em;
-			display: inline-block;
-		}
-	</style>
+	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
+	<h1 id="timeleft">Tap or space to start</h1>
 	<div id="panel-a">
 		<h1></h1>
-		<button class="grow">grow</button>
-		<button class="shrink">shrink</button>
+		<div class="grow button">W</div>
+		<div class="shrink button">S</div>
 	</div>
 	<div id="panel-b">
+		<div class="grow button">I</div>
+		<div class="shrink button">K</div>
 		<h1></h1>
-		<button class="grow">grow</button>
-		<button class="shrink">shrink</button>
-	</div>
-		
 	</div>
 	<script src="vendor/three.min.js"></script>
 	<script src="app.js"></script>

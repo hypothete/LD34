@@ -1,0 +1,67 @@
+body {
+	margin: 0;
+	overflow: hidden;
+	font-family: Helvetica;
+	color: #fff;
+}
+
+#panel-a {
+	position: absolute;
+	display:flex;
+	justify-content: flex-start;
+	align-items:center;
+	bottom: 50px;
+	left: 50px;
+	width: 20vmax;
+}
+
+#panel-a h1 {
+	margin-top: -5em;
+}
+
+#panel-b {
+	position: absolute;
+	display:flex;
+	justify-content: flex-end;
+	align-items:center;
+	bottom: 50px;
+	right: 50px;
+	width: 20vmax;
+}
+
+#panel-b h1 {
+	margin-top: -5em;
+}
+
+#timeleft {
+	position: absolute;
+	top: 50px;
+	left: 50%;
+	width: 25vw;
+	margin-left: -12.5vw;
+	text-align: center;
+	cursor: pointer;
+}
+
+#timeleft:hover{
+	color:#ffcccc;
+}
+
+.button {
+	position: relative;
+	font-size: 2em;
+	width:1.5em;
+	height:1.5em;
+	margin:0.5em;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	cursor: pointer;
+	border-radius: 50%;
+	border: 3px solid white;
+}
+
+.active {
+	color: crimson;
+	border-color: crimson;
+}
