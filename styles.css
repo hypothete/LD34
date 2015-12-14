@@ -4,6 +4,7 @@ body {
 	font-family: 'Chewy';
 	color: #eee;
 	letter-spacing: 0.125em;
+	display:flex;
 }
 
 #panel-a {
@@ -17,7 +18,8 @@ body {
 
 #panel-a h1 {
 	margin-top: -5em;
-	width: 1.5em;
+	width: 7%;
+	position: relative;
 }
 
 #panel-b {
@@ -31,7 +33,9 @@ body {
 
 #panel-b h1 {
 	margin-top: -5em;
-	width: 1.5em;
+	width: 7%;
+	position: relative;
+
 }
 
 #timeleft {
@@ -42,6 +46,7 @@ body {
 	margin-left: -12.5vw;
 	text-align: center;
 	cursor: pointer;
+	font-size: 3em;
 }
 
 #timeleft:hover{
@@ -52,18 +57,29 @@ body {
 	position: relative;
 	font-size: 1.5em;
 	color: rgba(255,255,255,0.5);
-	width:4em;
-	height:4em;
+	width:3em;
+	height:3em;
 	margin:0.5em;
 	align-items: center;
 	justify-content: center;
 	display: flex;
 	cursor: pointer;
-	border-radius: 50%;
+	border-radius: 25%;
 	border: 3px solid white;
 }
 
 .active {
 	color: crimson;
 	border-color: crimson;
+}
+
+#headline {
+	transform: skewY(-8deg);
+	font-size: 2em;
+	position: absolute;
+	bottom:35vh;
+	width: 75vw;
+	left: -25vw;
+	text-shadow: 6px 6px 0px rgba(32,32,38, 1);
+	color: #E0D5A1;
 }
