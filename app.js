@@ -10,18 +10,20 @@
 		keys = {},
 		walls = new MakeRoomBounds(size),
 		wallBounds= new THREE.BoundingBoxHelper(walls, 0xff00ff),
+		drip = new Audio('assets/drip.ogg'),
+		drop = new Audio('assets/drop.ogg'),
 
 		playerA = new Player(
 			new THREE.CatmullRomCurve3([new THREE.Vector3(4,size,1),new THREE.Vector3(4,size-0.1,1)]),
 			new THREE.Color(0.3,0.5,0),
 			document.querySelector('#panel-a'),
-			87, 83),
+			87, 83, drip),
 
 		playerB = new Player(
 			new THREE.CatmullRomCurve3([new THREE.Vector3(1,size,4),new THREE.Vector3(1,size-0.1,4)]),
 			new THREE.Color(0,0.5,0.3),
 			document.querySelector('#panel-b'),
-			73, 75),
+			73, 75, drop),
 
 		round = new Round(30, playerA, playerB);
 
@@ -127,10 +129,11 @@
 		return nbrs;
 	}
 
-	function Player(curve, color, domElement, keyGrow, keyShrink){
+	function Player(curve, color, domElement, keyGrow, keyShrink, sound){
 		var p = {
 			curve: curve,
 			color: color,
+			sound: sound,
 			grow: domElement.querySelector('.grow'),
 			keyGrow: keyGrow,
 			keyShrink: keyShrink,
@@ -212,10 +215,12 @@
 				if(keys[keyGrow] || p.growTouch){
 					p.state = 1;
 					p.grow.classList.add('active');
+					p.sound.play();
 				}
 				else if(keys[keyShrink] || p.shrinkTouch){
 					p.state = -1;
 					p.shrink.classList.add('active');
+					p.sound.play();
 				}
 				else {
 					p.state = 0;
@@ -296,10 +301,10 @@
 						r.pA.inRound = r.pB.inRound = false;
 
 						if(aScore > bScore){
-							r.domElement.textContent = 'Player A wins!';
+							r.domElement.textContent = 'Player 1 wins!';
 						}
 						else if(bScore > aScore){
-							r.domElement.textContent = 'Player B wins!';
+							r.domElement.textContent = 'Player 2 wins!';
 						}
 						else {
 							r.domElement.textContent = 'Tie';

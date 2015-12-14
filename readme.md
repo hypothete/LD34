@@ -1,7 +1,6 @@
 ##Todos
  * Splash Screen
  * Win Screen
- * Music
 
 ###Music stuff
  * Round music - 30s
