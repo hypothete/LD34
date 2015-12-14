@@ -12,7 +12,7 @@
 		wallBounds= new THREE.BoundingBoxHelper(walls, 0xff00ff),
 		drip = new Audio('assets/drip.ogg'),
 		drop = new Audio('assets/drop.ogg'),
-
+		particles = spawnParticles(new THREE.Color(1,0.8,0), new THREE.Vector3(0,0,100)),
 		playerA = new Player(
 			new THREE.CatmullRomCurve3([new THREE.Vector3(4,size,1),new THREE.Vector3(4,size-0.1,1)]),
 			new THREE.Color(0.3,0.5,0),
@@ -31,7 +31,7 @@
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	camera.position.set(-10,size+0.5,-10);
 	camera.lookAt(new THREE.Vector3(3,3,3));
-	scene.add(walls,wallBounds, playerB.mesh, playerA.mesh);
+	scene.add(walls,wallBounds, playerB.mesh, playerA.mesh, particles);
 	wallBounds.update();
 	wallBounds.visible = false;
 	makeLights();
@@ -55,6 +55,10 @@
 		playerA.updateState();
 		playerB.updateState();
 		round.update();
+		if(particles.visible){
+			particles.rotation.y += 0.01;
+			particles.scale.set(Math.sin(particles.rotation.y)+1,Math.sin(particles.rotation.y)+1,Math.sin(particles.rotation.y)+1);
+		}
 		renderer.render(scene, camera);
 	}
 
@@ -284,6 +288,7 @@
 			domElement: document.querySelector('#timeleft'),
 			start: function(){
 				r.timer.start();
+				particles.visible = false;
 				r.pA.curve.points.length = r.pB.curve.points.length = 2;
 				r.pA.inRound = r.pB.inRound = true;
 				r.pA.updateTube();
@@ -302,12 +307,21 @@
 
 						if(aScore > bScore){
 							r.domElement.textContent = 'Player 1 wins!';
+							particles.visible=true;
+							particles.material.color.copy(r.pA.color);
+							particles.material.needsUpdate = true;
+							particles.position.copy(r.pA.curve.points[0]);
 						}
 						else if(bScore > aScore){
 							r.domElement.textContent = 'Player 2 wins!';
+							particles.visible=true;
+							particles.material.color.copy(r.pB.color);
+							particles.material.needsUpdate = true;
+							particles.position.copy(r.pB.curve.points[0]);
 						}
 						else {
 							r.domElement.textContent = 'Tie';
+							particles.visible = false;
 						}
 					}
 				}
@@ -343,6 +357,22 @@
 		else if(elem.mozRequestFullscreen){
 			elem.mozRequestFullscreen();
 		}
+	}
+
+	function spawnParticles(color, pos){
+		var pMat = new THREE.PointsMaterial({
+				color: color,
+				map: THREE.ImageUtils.loadTexture('assets/sparkles.png'),
+				transparent:true
+			}),
+			pts = new THREE.Points(new THREE.Geometry(), pMat);
+		for(var i=0; i<25; i++){
+			pts.geometry.vertices.push(new THREE.Vector3(Math.random()*2-1,Math.random()*2-1,Math.random()*2-1));
+		}
+		pts.geometry.verticesNeedUpdate = true;
+		pts.position.copy(pos);
+		pts.visible = false;
+		return pts;
 	}
 
 })(window.THREE);
